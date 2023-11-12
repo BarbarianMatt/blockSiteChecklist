@@ -1,0 +1,228 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Website Blocker Options</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="../icons/icon-96.png">
+    <link rel="stylesheet" href="../lib/new_browser_style.css">
+    <link rel="stylesheet" href="../lib/fontawesome/css/fontawesome.css">
+    <link rel="stylesheet" href="../lib/fontawesome/css/solid.css">
+    <link rel="stylesheet" href="style/theme.css">
+</head>
+
+<body class="browser-style">
+
+    <div id="private-browsing-warning" class="panel-section has-help hidden">
+        <div class="message-bar warning">
+            <span>
+                <span data-i18n="bannerPrivateBrowsing"></span>
+                <a href="https://github.com/WesleyBranton/Website-Blocker/wiki/Allow-addon-to-run-in-Private-Browsing-mode" target="_blank" class="internal" data-i18n="actionLearnMore"></a>
+            </span>
+        </div>
+    </div>
+
+    <div id="dialog-add" class="dialog hidden">
+        <div class="panel-section has-help">
+            <strong data-i18n="headerAdd"></strong>
+        </div>
+        <div class="panel-section has-help">
+            <label for="add-mode" data-i18n="addModeLabel"></label>
+            <select id="add-mode" style="flex: 2;">
+                <option value="domain" selected data-i18n="addModeDomain"></option>
+                <option value="subdomain" data-i18n="addModeSubdomain"></option>
+                <option value="page" data-i18n="addModePage"></option>
+                <option value="custom" data-i18n="addModeCustom"></option>
+            </select>
+        </div>
+        <div class="panel-section has-help">
+            <label for="add-url" data-i18n="addUrlLabel"></label>
+            <input type="text" id="add-url" placeholder="*.example.com" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="flex: 2;">
+        </div>
+        <div class="panel-section">
+            <div id="error-add" class="error"></div>
+            <div>
+                <button id="add-help" class="ghost">
+                    <i class="fa-solid fa-circle-question"></i>
+                    <span data-i18n="actionHelp"></span>
+                </button>
+                <button id="add-cancel" class="secondary">
+                    <i class="fa-solid fa-xmark"></i>
+                    <span data-i18n="actionCancel"></span>
+                </button>
+                <button id="add-finish" class="default">
+                    <i class="fa-solid fa-plus"></i>
+                    <span data-i18n="actionAdd"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="dialog-delete" class="dialog hidden">
+        <div class="panel-section has-help">
+            <strong data-i18n="headerDelete"></strong>
+        </div>
+        <div id="delete-list-container" class="panel-section has-help">
+            <ul id="delete-list">
+                <!-- Populated by updateDeleteWebsiteList() -->
+            </ul>
+        </div>
+        <div class="panel-section">
+            <div class="error" data-i18n="deleteWarning"></div>
+            <div>
+                <button id="delete-cancel" class="secondary">
+                    <i class="fa-solid fa-xmark"></i>
+                    <span data-i18n="actionCancel"></span>
+                </button>
+                <button id="delete-finish" class="default">
+                    <i class="fa-solid fa-trash"></i>
+                    <span data-i18n="actionDelete"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="dialog-backup" class="dialog hidden">
+        <div class="panel-section has-help">
+            <strong data-i18n="actionImportAndExport" data-i18n-placeholders="actionImport, actionExport"></strong>
+        </div>
+        <div class="panel-section">
+            <label data-i18n="exportLabel"></label>
+            <button id="backup-download" class="default">
+                <i class="fa-solid fa-file-export"></i>
+                <span data-i18n="actionExport"></span>
+            </button>
+        </div>
+        <div class="panel-section-separator"></div>
+        <div class="panel-section">
+            <label data-i18n="importLabel"></label>
+            <div style="text-align: right;">
+                <label id="backup-filename" data-i18n="importNoFile"></label>
+                <br>
+                <label id="backup-overwrite-container" for="backup-overwrite">
+                    <input type="checkbox" id="backup-overwrite">
+                    <span data-i18n="importClearExisting"></span>
+                </label>
+                <br>
+                <input id="backup-file" type="file" accept=".json">
+                <button id="backup-browse" class="default">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span data-i18n="importSelectFile"></span>
+                </button>
+                <button id="backup-upload" class="default" disabled>
+                    <i class="fa-solid fa-file-import"></i>
+                    <span data-i18n="actionImport"></span>
+                </button>
+            </div>
+        </div>
+        <div class="panel-section-separator"></div>
+        <div class="panel-section">
+            <div id="error-backup" class="error"></div>
+            <div>
+                <button id="backup-finish" class="default">
+                    <i class="fa-solid fa-xmark"></i>
+                    <span data-i18n="actionClose"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-section has-help">
+        <div class="button-row">
+            <button id='button-add' class="default">
+                <i class="fa-solid fa-plus"></i>
+                <span data-i18n="actionAdd"></span>
+            </button>
+            <button id='button-delete' class="default" disabled>
+                <i class="fa-solid fa-trash"></i>
+                <span data-i18n="actionDelete"></span>
+            </button>
+            <button id='button-backup' class="default">
+                <i class="fa-solid fa-arrow-down-long" style="margin-right: 0;"></i>
+                <i class="fa-solid fa-arrow-up-long"></i>
+                <span data-i18n="actionImportAndExport" data-i18n-placeholders="actionImport, actionExport"></span>
+            </button>
+            
+        </div>
+    </div>
+    <div class="panel-section has-help">
+        <i class="fa-solid fa-magnifying-glass" style="flex: 0;"></i>
+        <div class="button-row" style="flex: 1; margin-left: 0.5em;">
+            <input id="search" type="text">
+        </div>
+    </div>
+    <div class="panel-section has-help">
+        <strong data-i18n="headerList"></strong>
+    </div>
+    <div class="panel-section help-row">
+        <div id="url-list" class="panel-section panel-section-list"></div>
+    </div>
+    <div class="panel-section help-row">
+        <div id="url-list-empty" class="panel-section" data-i18n="listEmpty"></div>
+    </div>
+    <div class="panel-section help-row hidden">
+        <div id="url-list-notfound" class="panel-section" data-i18n="listEmptySearch"></div>
+    </div>
+
+    <form name="settings">
+        <div class="panel-section-separator"></div>
+        <div class="panel-section has-help">
+            <strong data-i18n="headerSettings"></strong>
+        </div>
+        <div class="panel-section help-row">
+            <label for="showError" data-i18n="optionShowError"></label>
+            <select id="showError" name="showError">
+                <option value="yes" data-i18n="valueYes"></option>
+                <option value="no" data-i18n="valueNo"></option>
+            </select>
+        </div>
+        <div class="panel-section help-row">
+            <label for="reset-time" data-i18n="optionResetTime"></label>
+            <input type="time" id="reset-time" name="resetTime">
+        </div>
+        <div class="panel-section help-row">
+            <label for="task-time" data-i18n="optionTaskTime"></label>
+            <input type="time" id="task-time" name="taskTime">
+        </div>
+        <div class="panel-section help-row">
+            <button id="create-tasks-button" class="default">
+                <i class="fa-solid fa-tasks"></i>
+                <span data-i18n="actionCreateTasks"></span>
+            </button>
+        </div>
+    </form>
+    <div class="panel-section has-help">
+        <p>This addon was based on <a href="https://github.com/WesleyBranton/Website-Blocker" target="_blank">Wesley Branton's GitHub</a>. Below are links to the original and to donations</p>
+    </div>
+    <footer class="panel-section panel-section-footer">
+        <div>
+            <a href="https://github.com/WesleyBranton/Website-Blocker/wiki" target="_blank" class="internal" data-i18n="actionHelp"></a>
+        </div>
+        <div>
+            <a href="https://paypal.me/wbrantonaddons" target="_blank" class="internal" data-i18n="linkDonate"></a>
+        </div>
+        <div>
+            <a id="feedbacklink" class="internal" data-i18n="linkFeedback"></a>
+        </div>
+    </footer>
+
+    <template id="template-rule">
+        <div class="panel-list-item">
+            <div class="icon">
+                <input type="checkbox" class="checkbox">
+            </div>
+            <div class="text"></div>
+        </div>
+    </template>
+
+    <script src="script/class/Website.js"></script>
+    <script src="../lib/i18n_helper.js"></script>
+    <script src="script/main.js"></script>
+</body>
+
+</html>

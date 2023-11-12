@@ -1,0 +1,91 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+.panel-section-list :first-child {
+    flex: unset !important;
+}
+
+.button-row {
+    display: flex;
+}
+
+.button-row > button {
+    flex: 1;
+    margin: 0 0.5em;
+}
+
+#url-list {
+    max-height: 300px;
+    overflow: auto;
+}
+
+#url-list-empty,
+#url-list-notfound {
+    padding: 4px 0;
+    font-style: italic;
+}
+
+#backup-file {
+    visibility: hidden !important;
+    width: 0px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.error {
+    color: red;
+}
+
+.dialog {
+    margin: auto 16px;
+    border: 1px solid var(--secondary-color-3);
+    padding: 0 0.5em;
+}
+
+#search:disabled {
+    cursor: not-allowed;
+}
+
+#backup-overwrite-container {
+    display: inline-flex;
+    align-items: center;
+    width: max-content;
+    margin: 0.5em 0;
+}
+
+#backup-overwrite {
+    margin-right: 1em;
+}
+
+button > .fa-solid {
+    margin-right: 0.5em;
+}
+
+#delete-list-container {
+    max-height: 10em;
+    overflow-y: auto;
+    align-items: unset;
+    padding-top: 0;
+    margin-top: 1.15rem;
+}
+
+#delete-list {
+    margin: 0;
+}
+
+.panel-section-footer > div {
+    border-left: 1px solid var(--border-color);
+    padding: 0.5em;
+    text-align: center;
+}
+
+.panel-section-footer a {
+    cursor: pointer;
+}
+
+.panel-section-footer > div:first-of-type {
+    border: none;
+}
